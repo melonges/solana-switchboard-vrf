@@ -1,11 +1,11 @@
 [toolchain]
-
+anchor_version = "0.28.0"
 [features]
 resolution = true
 skip-lint = false
 
 [programs.localnet]
-burry_escrow = "DDFpiq1hQUmXPr6RvnYw4srpRjeDzGjkVNBZdr4oNfSw"
+burry_escrow = "Hb38mNFS2DmtmWA92vg249oxBffzP1mkNrPNRYQzgyEY"
 
 [registry]
 url = "https://api.apr.dev"
@@ -36,3 +36,13 @@ address = "Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk"
 
 [[test.validator.clone]] # switchboard-solana SOL/USD Feed
 address = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
+
+## VRF ACCOUNTS
+[[test.validator.clone]] # sbv2 attestation programID
+address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
+ 
+[[test.validator.clone]] # sbv2 attestation IDL
+address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
+ 
+[[test.validator.clone]] # sbv2 SbState
+address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"

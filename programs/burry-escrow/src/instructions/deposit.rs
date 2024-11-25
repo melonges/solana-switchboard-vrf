@@ -6,12 +6,12 @@ use anchor_lang::solana_program::{program::invoke, system_instruction::transfer}
 pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
     msg!("Depositing funds in escrow...");
 
-    let escrow = &mut ctx.accounts.escrow_account;
-    escrow.unlock_price = unlock_price;
-    escrow.escrow_amount = escrow_amount;
+    let escrow_state = &mut ctx.accounts.escrow_account;
+    escrow_state.unlock_price = unlock_price;
+    escrow_state.escrow_amount = escrow_amount;
+    escrow_state.out_of_jail = false;
 
-    let transfer_instruction =
-        transfer(&ctx.accounts.user.key(), &escrow.key(), escrow_amount);
+    let transfer_instruction = transfer(&ctx.accounts.user.key(), &escrow.key(), escrow_amount);
 
     invoke(
         &transfer_instruction,

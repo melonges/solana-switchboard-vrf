@@ -8,19 +8,22 @@ use switchboard_solana::AggregatorAccountData;
 
 pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
-    let escrow = &ctx.accounts.escrow_account;
+    let escrow_state = &ctx.accounts.escrow_account;
 
-    let current_sol_price: f64 = feed.get_result()?.try_into()?;
+    if !escrow_state.out_of_jail {
+        // get result
+        let current_sol_price: f64 = feed.get_result()?.try_into()?;
 
-    // Check if the feed has been updated in the last 5 minutes (300 seconds)
-    feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+        // check whether the feed has been updated in the last 300 seconds
+        feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
+            .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
-    msg!("Current SOL price is {}", current_sol_price);
-    msg!("Unlock price is {}", escrow.unlock_price);
+        msg!("Current feed result is {}!", val);
+        msg!("Unlock price is {}", escrow_state.unlock_price);
 
-    if current_sol_price < escrow.unlock_price {
-        return Err(EscrowErrorCode::SolPriceBelowUnlockPrice.into());
+        if current_sol_price < escrow_state.unlock_price as f64 {
+            return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
+        }
     }
 
     let escrow_lamports = escrow.escrow_amount;
